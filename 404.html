@@ -14,16 +14,23 @@
   })();
 </script>
 <style>
-  :root { --navy: #15244a; --gold: #e2a73a; --on-navy: #f6f2ea; --on-navy-2: #c3cce0; }
-  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--navy); color: var(--on-navy); font: 1.125rem/1.6 "Segoe UI", system-ui, sans-serif; padding: 24px; box-sizing: border-box; text-align: center; }
-  h1 { font-size: 1.75rem; margin: 0 0 8px; }
-  p { color: var(--on-navy-2); margin: 0 0 24px; }
-  a { display: inline-block; background: var(--gold); color: var(--navy); font-weight: 700; text-decoration: none; padding: 12px 22px; border-radius: 6px; }
+  @font-face { font-family: "Schibsted Grotesk"; font-weight: 600 800; font-display: swap; src: url("/proverbs-for-wisdom/assets/fonts/schibsted-grotesk-normal-600.woff2") format("woff2"), url("/assets/fonts/schibsted-grotesk-normal-600.woff2") format("woff2"); }
+  @font-face { font-family: "Atkinson Hyperlegible Next"; font-weight: 400 700; font-display: swap; src: url("/proverbs-for-wisdom/assets/fonts/atkinson-hyperlegible-next-normal-400.woff2") format("woff2"), url("/assets/fonts/atkinson-hyperlegible-next-normal-400.woff2") format("woff2"); }
+  :root { --navy: #15244a; --navy-950: #0d1730; --gold: #e2a73a; --gold-300: #f2cf86; --on-navy: #f6f2ea; --on-navy-2: #c3cce0; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--navy); color: var(--on-navy); font: 1.125rem/1.6 "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif; padding: 24px; box-sizing: border-box; }
+  ::selection { background: var(--gold-300); color: var(--navy-950); }
+  main { max-width: 34rem; }
+  .mark { font-family: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; font-weight: 800; font-size: 1.125rem; color: var(--gold-300); margin: 0 0 28px; }
+  h1 { font-family: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; font-weight: 800; font-size: clamp(1.75rem, 5vw, 2.5rem); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 12px; text-wrap: balance; }
+  p { color: var(--on-navy-2); margin: 0 0 28px; }
+  a { display: inline-block; background: var(--gold); color: var(--navy-950); font-weight: 700; text-decoration: none; padding: 12px 22px; border-radius: 6px; }
+  a:hover { background: var(--gold-300); }
   a:focus-visible { outline: 3px solid var(--on-navy); outline-offset: 3px; }
 </style>
 </head>
 <body>
   <main>
+    <p class="mark">Proverbs For Wisdom</p>
     <h1>We couldn't find that page.</h1>
     <p>If you typed a lesson address, check the numbers, like 17-3.</p>
     <a id="home" href="./">Go to Proverbs For Wisdom</a>

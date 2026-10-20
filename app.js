@@ -7,10 +7,9 @@ const BOOKS = [
     title: "Proverbs For Children",
     tagline: "Learning Wisdom for a Lifetime",
     ages: "7–10",
-    facts: "99 pages · 8 × 10 in",
+    isbn: "979-8194265558",
     pages: 99,
     price: null,
-    status: "Limited availability on Amazon",
     cover: "assets/covers/children-7-10.jpg",
     coverH: 950,
     amazon: "https://www.amazon.com/dp/B0HKCDXFRB",
@@ -21,7 +20,7 @@ const BOOKS = [
     title: "Proverbs For Children",
     tagline: "Live Wisely. Choose Well. Make a Difference.",
     ages: "11–13",
-    facts: "183 pages · $19.99",
+    isbn: "979-8176574050",
     pages: 183,
     price: "$19.99",
     cover: "assets/covers/children-11-13.jpg",
@@ -34,7 +33,8 @@ const BOOKS = [
     title: "Proverbs For Teens, Volume 1",
     tagline: "Wisdom for the Person You Are Becoming",
     ages: "14–17",
-    facts: "10 lessons · 203 pages · $17.95",
+    isbn: "979-8178985243",
+    extra: "10 lessons",
     pages: 203,
     price: "$17.95",
     cover: "assets/covers/teens-vol-1.jpg",
@@ -47,7 +47,7 @@ const BOOKS = [
     title: "Proverbs For Teens, Volume 2",
     tagline: "The second set of teen lessons",
     ages: "14–17",
-    facts: "203 pages · $17.95",
+    isbn: "979-8177669106",
     pages: 203,
     price: "$17.95",
     cover: null,
@@ -79,6 +79,8 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 const icon = (name, cls = "ic") => `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const bookById = (id) => BOOKS.find((b) => b.id === id);
 const slug = (l) => `${l.ch}-${l.v}`;
+const nb = (t) => esc(t).replace(/ (\d+)$/, "&nbsp;$1");
+const factsLine = (b) => `${b.pages} pages · ${b.price || "Limited availability"}`;
 const findLesson = (ch, v) => LESSONS.find((l) => l.ch === ch && l.v === v);
 
 function thumb(book, cls = "") {
@@ -96,13 +98,10 @@ function renderShelf() {
     const buyLabel = b.price ? "Buy on Amazon" : "See it on Amazon";
     return `<li class="book">
       <a class="book-cover" href="${b.amazon}" rel="noopener" tabindex="-1" aria-hidden="true">${cover}</a>
-      <div class="book-info">
-        <span class="book-ages">Ages ${b.ages}</span>
-        <span class="book-title">${esc(b.title)}</span>
-        <span class="book-facts">${esc(b.facts)}</span>
-        ${b.status ? `<span class="book-status">${esc(b.status)}</span>` : ""}
-        <a class="book-buy" href="${b.amazon}" rel="noopener">${buyLabel}<span class="sr">: ${esc(b.title)}, ages ${b.ages}</span>${icon("out")}</a>
-      </div>
+      <span class="book-ages">Ages ${b.ages}</span>
+      <span class="book-title">${nb(b.title)}</span>
+      <span class="book-facts">${factsLine(b)}</span>
+      <a class="book-buy" href="${b.amazon}" rel="noopener">${buyLabel}<span class="sr">: ${esc(b.title)}, ages ${b.ages}</span>${icon("out")}</a>
     </li>`;
   }).join("");
 }
@@ -110,11 +109,11 @@ function renderShelf() {
 /* ---------- comparison table ---------- */
 function renderTable() {
   $("#facts-body").innerHTML = BOOKS.map((b) => `<tr>
-    <td><div class="ft-book">${thumb(b)}<div><div class="ft-title">${esc(b.title)}</div><div class="ft-sub">${esc(b.tagline)}</div></div></div></td>
+    <td><div class="ft-book">${thumb(b)}<div><div class="ft-title">${nb(b.title)}</div><div class="ft-sub">${esc(b.tagline)}${b.extra ? ` · ${b.extra}` : ""}</div><div class="ft-isbn">ISBN ${b.isbn}</div></div></div></td>
     <td>${b.ages}</td>
     <td>${b.pages}</td>
     <td>${b.price ? b.price : `<span class="ft-muted">Limited</span>`}</td>
-    <td><a href="${b.amazon}" rel="noopener">Amazon<span class="sr">: ${esc(b.title)}, ages ${b.ages}</span>${icon("out")}</a></td>
+    <td><a href="${b.amazon}" rel="noopener">Buy<span class="sr"> on Amazon: ${esc(b.title)}, ages ${b.ages}</span>${icon("out")}</a></td>
   </tr>`).join("");
 }
 
@@ -125,7 +124,7 @@ function lessonRow(l) {
     <div class="lesson-ref" aria-label="Proverbs ${l.ch}:${l.v}">${l.ch}<span class="colon">:</span>${l.v}</div>
     <p class="lesson-verse">${esc(l.text)}</p>
     <div class="lesson-actions">
-      <button type="button" class="btn btn-gold" data-act="watch" data-slug="${s}">${icon("play")}Watch<span class="sr"> the lesson on Proverbs ${l.ch}:${l.v}</span></button>
+      <button type="button" class="btn btn-navy btn-small" data-act="watch" data-slug="${s}">${icon("play")}Watch<span class="sr"> the lesson on Proverbs ${l.ch}:${l.v}</span></button>
       <button type="button" class="btn btn-quiet" data-act="qr" aria-expanded="false" aria-controls="x-${s}">${icon("qr")}Link &amp; QR</button>
     </div>
     <div class="lesson-extra" id="x-${s}" hidden>
@@ -141,7 +140,7 @@ function renderLibrary() {
   $("#library").innerHTML = BOOKS.map((b) => {
     const items = LESSONS.filter((l) => l.book === b.id).sort((a, z) => a.ch - z.ch || a.v - z.v);
     return `<section class="lesson-group" data-book="${b.id}" aria-label="${esc(b.title)}, ages ${b.ages}">
-      <div class="group-head">${thumb(b)}<div><div class="group-title">${esc(b.title)}</div><div class="group-ages">Ages ${b.ages}</div></div></div>
+      <div class="group-head">${thumb(b)}<div><div class="group-title">${nb(b.title)}</div><div class="group-ages">Ages ${b.ages}</div></div></div>
       ${items.length
         ? `<ol class="lesson-list">${items.map(lessonRow).join("")}</ol>`
         : `<div class="lesson-list"><p class="empty">Lessons for this book are on the way.</p></div>`}
@@ -242,11 +241,10 @@ function initFinder() {
     current = lesson;
     const book = bookById(lesson.book);
     status.dataset.state = "found";
-    status.textContent = "Found it.";
+    status.textContent = `Found Proverbs ${lesson.ch}:${lesson.v} in ${book.title}.`;
     result.innerHTML = `${thumb(book)}
-      <div class="fr-text"><span class="fr-ref">Proverbs ${lesson.ch}:${lesson.v}</span><span class="fr-book">${esc(book.title)} · Ages ${book.ages}</span></div>
-      <div class="fr-actions"><button type="submit" class="btn btn-gold btn-small">${icon("play")}Watch the lesson</button><a href="#lesson-${slug(lesson)}" data-show>See it in the list</a></div>
-      <p class="fr-note" hidden>Preview: Jerry's video opens here once he sends the link.</p>`;
+      <div class="fr-text"><span class="fr-ref">Proverbs ${lesson.ch}:${lesson.v}</span><span class="fr-book">${esc(book.filter)} · <a href="#lesson-${slug(lesson)}" data-show>See it in the list</a></span></div>
+      <button type="submit" class="btn fr-watch">${icon("play")}Watch</button>`;
     result.hidden = false;
   }
 
@@ -262,7 +260,7 @@ function initFinder() {
     update();
     if (!current) { input.focus(); return; }
     if (current.video) { location.href = current.video; return; }
-    $(".fr-note", result).hidden = false;
+    $(".fr-book", result).textContent = "Preview: Jerry's video link goes here.";
     showLesson(current.ch, current.v);
   });
 
